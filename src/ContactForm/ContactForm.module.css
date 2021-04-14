@@ -15,3 +15,9 @@ button:hover {
   color: #0a0131ab;
   border-color: #0a0131ab;
 }
+.contactform {
+  width: 300px;
+  padding: 20px;
+  display: block;
+  border: 1px solid #477405;
+}

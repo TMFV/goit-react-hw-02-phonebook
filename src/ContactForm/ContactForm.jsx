@@ -24,8 +24,10 @@ class ContactForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    let contactForAdd = { name: this.state.name, number: this.state.number };
     //console.log(this.state);
-    this.props.onSubmitData(this.state);
+    this.props.onSubmitData(contactForAdd);
+
     this.reset();
   };
 
@@ -34,7 +36,7 @@ class ContactForm extends Component {
   };
   render() {
     return (
-      <div>
+      <div className={style.contactform}>
         <form type="submit" onSubmit={this.handleSubmit}>
           <label>
             Name

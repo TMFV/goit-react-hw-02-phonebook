@@ -5,10 +5,6 @@ import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 
-function toUp(string) {
-  return string.toUpperCase();
-}
-
 class App extends Component {
   state = {
     contacts: [
@@ -21,37 +17,46 @@ class App extends Component {
   };
 
   formSubmitHandler = data => {
-    console.log(data);
-    let arrayCont = [
-      ...this.state.contacts,
-      { id: uuidv4(), name: [data.name], number: data.number },
-    ];
-    this.setState({ ...this.state, contacts: arrayCont });
-    this.filtredList(this.state.contacts, this.state.filter);
-    arrayCont = [];
+    this.repeatControl(data);
   };
 
-  elDelete = (arr, idContact) => {
+  repeatControl = data => {
+    let nameArray = [];
+    nameArray = this.state.contacts.map(cur => cur.name);
+    if (!nameArray.includes(data.name)) {
+      let arrayCont = [];
+      arrayCont = [
+        ...this.state.contacts,
+        { id: uuidv4(), name: data.name, number: data.number },
+      ];
+      return this.setState({ ...this.state, contacts: arrayCont });
+    } else {
+      alert(' Контакт вже є у телефонній книзі!!!');
+    }
+  };
+
+  elementDelete = (arr, idContact) => {
     let newArr = arr.filter(elem => elem.id !== idContact);
     return newArr;
   };
 
   deleteContactFromContactList = idContact => {
-    let newArrAfterDel = this.elDelete(this.state.contacts, idContact);
+    let newArrAfterDel = this.elementDelete(this.state.contacts, idContact);
     this.setState({
       ...this.state,
       contacts: [...newArrAfterDel],
     });
-    this.filtredList(this.state.contacts, this.state.filter);
   };
 
   setFilterToState = filterData => {
     this.setState({ ...this.state, filter: `${filterData}` });
   };
-  toCase = string => `${string.toUpperCase()}`;
 
-  filtredList = (state, filter) => {
-    return state.filter(cont => toUp(cont.name).includes(filter));
+  filterArr = fArr => {
+    let newArr = fArr.filter(cur =>
+      cur.name.toUpperCase().includes(this.state.filter),
+    );
+    return newArr;
   };
 
   render() {
@@ -59,15 +64,14 @@ class App extends Component {
       <div className="App">
         <h1>Phonebook</h1>
         <ContactForm onSubmitData={this.formSubmitHandler} />
-
+        <h1>Contacts</h1>
         <Filter setFilterToState={this.setFilterToState} />
         <ContactList
-          contacts={this.filtredList(this.state.contacts, this.state.filter)}
+          contacts={this.filterArr(this.state.contacts)}
           del={this.deleteContactFromContactList}
         />
       </div>
     );
   }
 }
-
 export default App;
